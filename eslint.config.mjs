@@ -1,5 +1,9 @@
-import react from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import typescriptEslint from '@typescript-eslint/eslint-plugin';
 import globals from 'globals';
+
+import { fixupPluginRules } from '@eslint/compat';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import js from '@eslint/js';
@@ -14,31 +18,86 @@ const compat = new FlatCompat({
 });
 
 export default [
-  ...compat.extends('plugin:react/recommended', './node_modules/gts/'),
+  {
+    ignores: ['**/*.js'],
+  },
+  ...compat.extends(
+    './node_modules/gts/',
+    'plugin:react/recommended',
+    'plugin:@typescript-eslint/recommended'
+  ),
   {
     plugins: {
-      react,
+      'react-hooks': fixupPluginRules(reactHooks),
+      'simple-import-sort': simpleImportSort,
+      '@typescript-eslint': typescriptEslint,
     },
 
-    languageOptions: {
-      globals: {
-        ...globals.browser,
-      },
-
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-    },
-
-    rules: {
-      '@typescript-eslint/no-empty-interface': 'off',
-      '@typescript-eslint/no-empty-object-type': 'off',
-      '@typescript-eslint/no-duplicate-enum-values': 'off',
-      'react/react-in-jsx-scope': 'off',
-    },
     settings: {
       react: {
         version: 'detect',
       },
+    },
+
+    globals: {
+      ...globals.jest,
+    },
+
+    rules: {
+      'react/prop-types': 0,
+      'react/react-in-jsx-scope': 'off',
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+      '@typescript-eslint/no-var-requires': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-empty-object-type': [
+        'warn',
+        {
+          allowInterfaces: 'always',
+        },
+      ],
+      '@typescript-eslint/no-unsafe-function-type': 'warn',
+      '@typescript-eslint/no-wrapper-object-types': 'warn',
+
+      'prettier/prettier': [
+        'error',
+        {
+          endOfLine: 'auto',
+        },
+      ],
+
+      '@typescript-eslint/no-restricted-types': [
+        'warn',
+        {
+          types: {
+            'React.FC': {
+              message:
+                'Prefer using React.FunctionComponent instead of React.FC',
+            },
+          },
+        },
+      ],
+    },
+  },
+  {
+    files: ['**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx'],
+
+    rules: {
+      'simple-import-sort/imports': [
+        'error',
+        {
+          groups: [
+            ['^react', '^@?\\w'],
+            ['^(@|components)(/.*|$)'],
+            ['^\\u0000'],
+            ['^\\.\\.(?!/?$)', '^\\.\\./?$'],
+            ['^\\./(?=.*/)(?!/?$)', '^\\.(?!/?$)', '^\\./?$'],
+            ['^.+\\.?(css)$'],
+          ],
+        },
+      ],
     },
   },
 ];

@@ -1,5 +1,6 @@
-import { StatusBar } from 'expo-status-bar';
 import { Text, View } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+
 import { styles } from './HomeScreen.styles';
 
 export interface HomeScreenProps {}
