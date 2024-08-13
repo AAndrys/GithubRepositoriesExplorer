@@ -39,8 +39,10 @@ export default [
       },
     },
 
-    globals: {
-      ...globals.jest,
+    languageOptions: {
+      globals: {
+        ...globals.jest,
+      },
     },
 
     rules: {
