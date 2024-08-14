@@ -13,6 +13,12 @@ export const styles = StyleSheet.create({
     marginTop: StatusBar.currentHeight || 0,
     padding: 20,
   },
+  info: {
+    marginTop: 20,
+  },
+  infoText: {
+    fontSize: 15,
+  },
   list: {
     flex: 2,
     marginTop: 20,

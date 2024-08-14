@@ -15,6 +15,7 @@ import Animated, {
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import { useQuery } from '@tanstack/react-query';
 
+import { useGlobalState } from '../../../state/global';
 import { QueryKeys } from '../../../utils/enums';
 import { getUserRepo } from '../../../utils/queries';
 import {
@@ -35,6 +36,7 @@ const AccordionList: FunctionComponent<AccordionListProps> = ({
   login,
   node_id,
 }) => {
+  const { setData } = useGlobalState();
   const open: SharedValue<boolean> = useSharedValue(false);
 
   const { isLoading, isError, data, refetch } = useQuery({
@@ -46,6 +48,7 @@ const AccordionList: FunctionComponent<AccordionListProps> = ({
   const onPress = () => {
     open.value = !open.value;
     refetch();
+    setData({ isListExtended: !open.value });
   };
 
   const arrowStyle = useAnimatedStyle(() => {

@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "GithubRepositoriesExplorer",
-    "slug": "GithubRepositoriesExplorer",
+    "slug": "github-repositories-explorer",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -22,6 +22,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "e8948802-7d62-4901-ac99-3d790d9db177"
+      }
+    },
+    "owner": "aandrys"
   }
 }

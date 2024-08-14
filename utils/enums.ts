@@ -6,4 +6,5 @@ export enum ApiRequests {
 export enum QueryKeys {
   Users = 'users',
   Repos = 'repos',
+  Global = 'global',
 }
