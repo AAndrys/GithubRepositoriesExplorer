@@ -30,6 +30,12 @@
         "projectId": "e8948802-7d62-4901-ac99-3d790d9db177"
       }
     },
-    "owner": "aandrys"
+    "owner": "aandrys",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/e8948802-7d62-4901-ac99-3d790d9db177"
+    }
   }
 }
