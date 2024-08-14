@@ -16,6 +16,5 @@ export const styles = StyleSheet.create({
   list: {
     flex: 2,
     marginTop: 20,
-    backgroundColor: 'gray',
   },
 });

@@ -1,33 +1,46 @@
-import { FunctionComponent, useRef } from 'react';
-import { TextInput, View } from 'react-native';
+import { FunctionComponent, useState } from 'react';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useQuery } from '@tanstack/react-query';
 import { StatusBar } from 'expo-status-bar';
 
 import Accordion from '../../components/Accordion/Accordion';
-// import debounce from 'lodash/debounce';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
+import { QueryKeys } from '../../utils/enums';
+import { getUsers } from '../../utils/queries';
 
 import { styles } from './HomeScreen.styles';
 
 export interface HomeScreenProps {}
 
 const HomeScreen: FunctionComponent<HomeScreenProps> = () => {
-  const textInputRef = useRef<TextInput>(null);
+  const [inputValue, setInputValue] = useState<string>('');
+
+  const { isLoading, isError, refetch } = useQuery({
+    queryKey: [QueryKeys.Users],
+    queryFn: () => getUsers(inputValue, inputValue),
+    enabled: false,
+  });
 
   const handlePressSearch = () => {
-    console.log('press');
+    refetch();
   };
+
+  const error = <Text>Error occurred</Text>;
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Input ref={textInputRef} placeholder="Enter username" />
+        <Input
+          setValueChange={text => setInputValue(text)}
+          placeholder="Enter username"
+        />
 
         <Button label="Search" onPress={handlePressSearch} />
 
         <View style={styles.list}>
-          <Accordion />
+          {isLoading ? <ActivityIndicator /> : isError ? error : <Accordion />}
         </View>
         <StatusBar style="auto" />
       </View>

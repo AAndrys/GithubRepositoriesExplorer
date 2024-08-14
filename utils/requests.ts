@@ -1,7 +1,7 @@
 import { apiClient } from './api';
 import { ApiRequests } from './enums';
 
-export const getRequest = (URL: ApiRequests) => {
+export const getRequest = (URL: ApiRequests | string) => {
   return apiClient.get(`/${URL}`);
 };
 

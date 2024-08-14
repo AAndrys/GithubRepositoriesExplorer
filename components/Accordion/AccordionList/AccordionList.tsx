@@ -1,43 +1,112 @@
 import { FunctionComponent } from 'react';
-import { FlatList, Text, TouchableOpacity } from 'react-native';
-import { SharedValue, useSharedValue } from 'react-native-reanimated';
+import {
+  ActivityIndicator,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import Animated, {
+  SharedValue,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
+import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
+import { useQuery } from '@tanstack/react-query';
 
+import { QueryKeys } from '../../../utils/enums';
+import { getUserRepo } from '../../../utils/queries';
+import {
+  UserApiDataTypes,
+  UserRepoApiDataTypes,
+} from '../../../utils/sharedTypes';
+import { colors } from '../../../utils/styles/theme';
+import AccordionAnimation from '../AccordionAnimation/AccordionAnimation';
 import AccordionItem from '../AccordionItem/AccordionItem';
 
 import { styles } from './AccordionList.styles';
 
-export interface AccordionListProps {
-  item: { id: string; name: string };
-}
+export interface AccordionListProps extends UserApiDataTypes {}
 
-const TEMP_DATA = [
-  { id: '1', name: 'nanaa' },
-  { id: '2', name: 'gggg' },
-  { id: '3', name: 'erwerwr' },
-];
+type DataTypes = { item: UserRepoApiDataTypes };
 
-const AccordionList: FunctionComponent<AccordionListProps> = ({ item }) => {
+const AccordionList: FunctionComponent<AccordionListProps> = ({
+  login,
+  node_id,
+}) => {
   const open: SharedValue<boolean> = useSharedValue(false);
+
+  const { isLoading, isError, data, refetch } = useQuery({
+    queryKey: [QueryKeys.Repos, { login }],
+    queryFn: () => getUserRepo(login),
+    enabled: false,
+  });
 
   const onPress = () => {
     open.value = !open.value;
+    refetch();
   };
 
+  const arrowStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ rotate: withSpring(open.value ? '180deg' : '0deg') }],
+    };
+  });
+
+  const arrow = (
+    <Animated.View style={arrowStyle}>
+      <SimpleLineIcons name="arrow-down" size={24} color={colors.black} />
+    </Animated.View>
+  );
+
+  const renderItem = ({
+    item: { name, description, stargazers_count },
+  }: DataTypes) => (
+    <AccordionItem
+      title={name}
+      description={description}
+      stars={stargazers_count}
+    />
+  );
+
+  const error = <Text>Error occurred</Text>;
+
   return (
-    <>
-      <TouchableOpacity onPress={onPress} style={styles.container}>
-        <Text>{item.name}</Text>
+    <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.listItem}
+        onPress={onPress}
+        activeOpacity={0.8}
+      >
+        <Text>{login}</Text>
+        {arrow}
       </TouchableOpacity>
-      <FlatList
-        data={TEMP_DATA}
-        renderItem={({ item }) => (
-          <AccordionItem isExpanded={open} viewKey={item.id} duration={0}>
-            <Text>{item.name}</Text>
-          </AccordionItem>
+
+      <AccordionAnimation isExpanded={open} viewKey={node_id}>
+        {isError ? (
+          error
+        ) : (
+          <FlatList
+            data={data}
+            renderItem={renderItem}
+            keyExtractor={item => item.node_id}
+            ListEmptyComponent={
+              !isLoading ? (
+                <Text style={styles.emptyText}>No projects available</Text>
+              ) : null
+            }
+            ListHeaderComponent={
+              isLoading ? (
+                <View style={styles.indicator}>
+                  <ActivityIndicator />
+                </View>
+              ) : null
+            }
+          />
         )}
-        keyExtractor={item => item.id}
-      />
-    </>
+      </AccordionAnimation>
+    </View>
   );
 };
 

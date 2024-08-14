@@ -1,24 +1,22 @@
 import { FunctionComponent } from 'react';
 import { FlatList, View } from 'react-native';
 
+import { useUsersState } from '../../state/users';
+
 import AccordionList from './AccordionList/AccordionList';
 import { styles } from './Accordion.styles';
 
 export interface AccordionProps {}
 
-export const TEMP_DATA = [
-  { id: '1', name: 'nanaa' },
-  { id: '2', name: 'gggg' },
-  { id: '3', name: 'erwerwr' },
-];
-
 const Accordion: FunctionComponent<AccordionProps> = () => {
+  const { data } = useUsersState();
+
   return (
     <View style={styles.container}>
       <FlatList
-        data={TEMP_DATA}
-        renderItem={({ item }) => <AccordionList item={item} />}
-        keyExtractor={item => item.id}
+        data={data}
+        renderItem={({ item }) => <AccordionList {...item} />}
+        keyExtractor={item => item.node_id}
       />
     </View>
   );

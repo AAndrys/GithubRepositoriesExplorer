@@ -4,8 +4,10 @@ import {
   createNativeStackNavigator,
   NativeStackNavigationOptions,
 } from '@react-navigation/native-stack';
+import { QueryClientProvider } from '@tanstack/react-query';
 
 import HomeScreen, { HomeScreenProps } from './screens/HomeScreen/HomeScreen';
+import queryClient from './utils/queryClient';
 
 export interface AppProps {}
 
@@ -27,18 +29,20 @@ const screens: Screen[] = [
 
 const App: FunctionComponent<AppProps> = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        {screens.map(({ name, component, options }) => (
-          <Stack.Screen
-            key={name}
-            name={name}
-            component={component}
-            options={options}
-          />
-        ))}
-      </Stack.Navigator>
-    </NavigationContainer>
+    <QueryClientProvider client={queryClient}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Home">
+          {screens.map(({ name, component, options }) => (
+            <Stack.Screen
+              key={name}
+              name={name}
+              component={component}
+              options={options}
+            />
+          ))}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </QueryClientProvider>
   );
 };
 

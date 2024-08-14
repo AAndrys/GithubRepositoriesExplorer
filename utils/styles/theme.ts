@@ -26,7 +26,7 @@ export interface Theme {
 export const colors: Theme['colors'] = {
   white: '#FFFFFF',
   black: '#000000',
-  silver: '#CCCCC',
+  silver: '#CCCCCC',
   dodgerBlue: '#2686FF',
   silverChaice: '#A1A1A1',
 };

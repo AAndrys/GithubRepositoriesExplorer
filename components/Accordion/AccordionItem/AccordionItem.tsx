@@ -1,56 +1,36 @@
-import { FunctionComponent, ReactNode } from 'react';
-import { View, ViewStyle } from 'react-native';
-import Animated, {
-  SharedValue,
-  useAnimatedStyle,
-  useDerivedValue,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import { FunctionComponent } from 'react';
+import { Text, View } from 'react-native';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+
+import { UserRepoApiDataTypes } from '../../../utils/sharedTypes';
 
 import { styles } from './AccordionItem.styles';
 
 export interface AccordionItemProps {
-  isExpanded: SharedValue<boolean>;
-  children: ReactNode;
-  viewKey: string;
-  style?: ViewStyle;
-  duration: number;
+  title: UserRepoApiDataTypes['name'];
+  description: UserRepoApiDataTypes['description'];
+  stars: UserRepoApiDataTypes['stargazers_count'];
 }
 
 const AccordionItem: FunctionComponent<AccordionItemProps> = ({
-  isExpanded,
-  children,
-  viewKey,
-  style,
-  duration = 500,
+  title,
+  description,
+  stars = 1,
 }) => {
-  const height = useSharedValue(0);
-
-  const derivedHeight = useDerivedValue(() =>
-    withTiming(height.value * Number(isExpanded.value), {
-      duration,
-    })
-  );
-
-  const bodyStyle = useAnimatedStyle(() => ({
-    height: derivedHeight.value,
-  }));
-
   return (
-    <Animated.View
-      key={`accordionItem_${viewKey}`}
-      style={[styles.animatedView, bodyStyle, style]}
-    >
-      <View
-        onLayout={e => {
-          height.value = e.nativeEvent.layout.height;
-        }}
-        style={styles.wrapper}
-      >
-        {children}
+    <View style={styles.container}>
+      <View style={styles.textWrapper}>
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.description}>{description}</Text>
       </View>
-    </Animated.View>
+
+      <View style={styles.wrapper}>
+        <View style={styles.icon}>
+          <Text>{stars}</Text>
+          <MaterialCommunityIcons name="star" size={24} color="black" />
+        </View>
+      </View>
+    </View>
   );
 };
 

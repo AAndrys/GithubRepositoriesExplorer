@@ -1,22 +1,35 @@
 import { StyleSheet } from 'react-native';
 
+import { colors } from '../../../utils/styles/theme';
+
 export const styles = StyleSheet.create({
   container: {
-    width: 200,
-    height: 50,
-    backgroundColor: 'yellow',
+    minHeight: 125,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    backgroundColor: colors.silverChaice,
+    marginTop: 10,
+    marginLeft: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 15,
   },
-  animatedView: {
-    width: '100%',
-    height: 50,
-    backgroundColor: 'yellow',
-    overflow: 'hidden',
+  textWrapper: {
+    flex: 3,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  description: {
+    fontSize: 14,
   },
   wrapper: {
-    width: '100%',
-    height: 50,
-    display: 'flex',
+    flex: 1,
+    alignItems: 'flex-end',
+  },
+  icon: {
+    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'yellow',
+    flexDirection: 'row',
   },
 });

@@ -1,3 +1,9 @@
 export enum ApiRequests {
-  Logs = 'api/logs',
+  SearchUsers = 'search/users',
+  UserRepo = 'users/',
+}
+
+export enum QueryKeys {
+  Users = 'users',
+  Repos = 'repos',
 }
